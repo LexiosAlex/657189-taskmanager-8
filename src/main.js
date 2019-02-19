@@ -4,8 +4,8 @@
   const FILTERS_TEMPLATE =  document.querySelector('.main__filter');
   const CARDS_TEMPLATE = document.querySelector('.board__tasks');
 
-  const getFilteredElement = function (caption, amount, isDisabled = false, isChecked = false) {
-  return `
+  const getFilteredElement = (caption, amount, isDisabled = false, isChecked = false) =>
+`
     <input
       type="radio"
       id="filter__${caption.toLowerCase()}"
@@ -17,7 +17,6 @@
     <label for="filter__${caption.toLowerCase()}" class="filter__label">
       ${caption.toUpperCase()} <span class="filter__${caption.toLowerCase()}-count">${amount}</span></label
     >`;
-  };
 
   FILTERS_TEMPLATE.insertAdjacentHTML(`beforeend`, getFilteredElement(`All`, 15, false, true));
   FILTERS_TEMPLATE.insertAdjacentHTML(`beforeend`, getFilteredElement(`overdue`, 0, true));
@@ -27,8 +26,8 @@
   FILTERS_TEMPLATE.insertAdjacentHTML(`beforeend`, getFilteredElement(`tags`, 6, false));
   FILTERS_TEMPLATE.insertAdjacentHTML(`beforeend`, getFilteredElement(`archive`, 115, false));
 
-  const getCardElement = function () {
-    return `
+  const getCardElement = () =>
+    `
       <article class="card card--blue">
         <form class="card__form" method="get">
           <div class="card__inner">
@@ -321,8 +320,8 @@
           </div>
         </form>
       </article>`;
-  };
-  const createCardElement = function (cardsCount) {
+
+  const createCardElement = (cardsCount) => {
     let i = 0;
     while (i < cardsCount) {
       CARDS_TEMPLATE.insertAdjacentHTML(`beforeend`, getCardElement());
@@ -331,18 +330,19 @@
   };
   createCardElement(7);
 
-  const removeCards = function () {
+  const removeCards = () => {
     let cardsArray = CARDS_TEMPLATE.querySelectorAll('.card');
-    cardsArray.forEach(function(item) {
+    cardsArray.forEach((item) => {
       CARDS_TEMPLATE.removeChild(item);
-    });
+      }
+    );
   };
 
-  const addRandomCardsAmount = function() {
+  const addRandomCardsAmount = () => {
     createCardElement(Math.floor(Math.random() * 10));
   };
 
-  const filtersListener = function() {
+  const filtersListener = () => {
     FILTERS_TEMPLATE.querySelectorAll('.filter__input').forEach(function(item) {
       item.addEventListener('click', function() {
         removeCards();
@@ -352,3 +352,4 @@
   }
   filtersListener();
 }
+
