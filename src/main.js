@@ -1,18 +1,18 @@
 'use strict';
 
 {
-  const FILTERS_TEMPLATE =  document.querySelector('.main__filter');
-  const CARDS_TEMPLATE = document.querySelector('.board__tasks');
+  const FILTERS_TEMPLATE = document.querySelector(`.main__filter`);
+  const CARDS_TEMPLATE = document.querySelector(`.board__tasks`);
 
   const getFilteredElement = (caption, amount, isDisabled = false, isChecked = false) =>
-`
+    `
     <input
       type="radio"
       id="filter__${caption.toLowerCase()}"
       class="filter__input visually-hidden"
       name="filter"
-      ${isDisabled ? " disabled" : ""}
-      ${isChecked ? " checked" : ""}
+      ${isDisabled ? ` disabled` : ``}
+      ${isChecked ? ` checked` : ``}
     />
     <label for="filter__${caption.toLowerCase()}" class="filter__label">
       ${caption.toUpperCase()} <span class="filter__${caption.toLowerCase()}-count">${amount}</span></label
@@ -326,16 +326,15 @@
     while (i < cardsCount) {
       CARDS_TEMPLATE.insertAdjacentHTML(`beforeend`, getCardElement());
       i++;
-    };
+    }
   };
   createCardElement(7);
 
   const removeCards = () => {
-    let cardsArray = CARDS_TEMPLATE.querySelectorAll('.card');
+    let cardsArray = CARDS_TEMPLATE.querySelectorAll(`.card`);
     cardsArray.forEach((item) => {
       CARDS_TEMPLATE.removeChild(item);
-      }
-    );
+    });
   };
 
   const addRandomCardsAmount = () => {
@@ -343,13 +342,13 @@
   };
 
   const filtersListener = () => {
-    FILTERS_TEMPLATE.querySelectorAll('.filter__input').forEach(function(item) {
-      item.addEventListener('click', function() {
+    FILTERS_TEMPLATE.querySelectorAll(`.filter__input`).forEach((item) => {
+      item.addEventListener(`click`, () => {
         removeCards();
         addRandomCardsAmount();
       });
-    })
-  }
+    });
+  };
   filtersListener();
 }
 
