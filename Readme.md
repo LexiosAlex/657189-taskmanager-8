@@ -1,6 +1,6 @@
 # Личный проект «Менеджер задач» [![Build status][travis-image]][travis-url]
 
-* Студент: [Алексей Мамаев (LexiosAlex)](https://up.htmlacademy.ru/javascript/16/user/657189).
+* Студент: [Алексей Мамаев (LexiosAlex)](https://up.htmlacademy.ru/ecmascript/8/user/657189).
 * Наставник: [Евгений Колегов (KollegOFF)](https://htmlacademy.ru/profile/id21780).
 
 ---
