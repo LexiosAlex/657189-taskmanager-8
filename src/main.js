@@ -6,7 +6,7 @@
   const WEEKDAYS = [`mo`, `tu`, `we`, `th`, `fr`, `sa`, `su`];
   const COLORLIST = [`black`, `yellow`, `blue`, `green`, `pink`];
 
-  function getFilterElement (data) {
+  function getFilterElement(data) {
     const {caption, amount, checked = false, disabled = false} = data;
     const elementTemplate = document.createElement(`template`);
 
@@ -24,10 +24,9 @@
       ${caption.toUpperCase()} <span class="filter__${caption.toLowerCase()}-count">${amount}</span></label
     >`;
 
-    elementTemplate.innerHTML(createFilter);
-    FILTERS_TEMPLATE.appendChild(elementTemplate.content)
-
-  };
+    elementTemplate.innerHTML = createFilter;
+    FILTERS_TEMPLATE.appendChild(elementTemplate.content);
+  }
 
 
   const filterElements = [
@@ -62,9 +61,14 @@
       caption: `archive`,
       amount: 115
     },
-  ]
+  ];
 
-  getFilterElement(filterElements)
+  const renderFilter = (data) => {
+    data.forEach((item) => getFilterElement(item));
+  };
+
+  renderFilter(filterElements);
+
 
   // const getFilteredElement = (caption, amount, isDisabled = false, isChecked = false) =>
   //   `
@@ -89,23 +93,23 @@
   // FILTERS_TEMPLATE.insertAdjacentHTML(`beforeend`, getFilteredElement(`archive`, 115, false));
 
   const cardData = ({
-    controls: [`edit`,  `archive`, `favorites`],
-    color: 'blue',
-    weekdays: [`sun`,`mon`,`tue`,`wed`,`thu`,`fri`,`sat`],
+    controls: [`edit`, `archive`, `favorites`],
+    color: `blue`,
+    weekdays: [`sun`, `mon`, `tue`, `wed`, `thu`, `fri`, `sat`],
     id: 51,
     repeatDays: {
       [WEEKDAYS[2]]: true
     },
     edit: true,
-    text: 'agsagsagda'
+    text: `agsagsagda`,
+    hashtags: [`great`, `endlessHate`]
   });
 
   const getCardElement = (data) => {
-    debugger;
-    const {controls, disabledControl, color, date, id, repeatDays, hashtags = [], img, edit, text} = data;
+    const {controls, color, date, id, repeatDays, hashtags = [], img, edit, text} = data;
     const elementTemplate = document.createElement(`template`);
     const cardElement = {};
-    const disabledControlCkeck = disabledControl ? disabledControl : {};
+    // const disabledControlCkeck = disabledControl ? disabledControl : {};
     const repeatDaysCheck = repeatDays ? repeatDays : {};
 
     cardElement.control =
@@ -123,9 +127,8 @@
       ${controls.map((item) => `
       <button type="button" class="card__btn card__btn--${item.toLowerCase()}">
         ${item.toLowerCase()}
-      </button>`
-    ).join(``)}
-    </div>
+      </button>`).join(``)}
+  </div>
     `;
 
     cardElement.colorBar =
@@ -271,8 +274,8 @@
       </div>
     `;
 
-  cardElement.settings =
-  `
+    cardElement.settings =
+    `
     <div class="card__settings">
       ${settings.details}
       ${settings.img}
@@ -280,31 +283,32 @@
     </div>
     `;
 
-  cardElement.statusBtns =
-  `
+    cardElement.statusBtns =
+    `
     <div class="card__status-btns">
       <button class="card__save" type="submit">save</button>
       <button class="card__delete" type="button">delete</button>
     </div>
-  `;
+    `;
 
-  const cardContent = `
-  <article class="card ${edit ? `card--edit` : ``} ${repeatDays ? `card--repeat` : ``}">
-    <form class="card__form" method="get">
-      <div class="card__inner">
-        ${cardElement.control}
-        ${cardElement.colorBar}
-        ${cardElement.textArea}
-        ${cardElement.settings}
-        ${cardElement.statusBtns}
-      </div>
-    </form>
-  </article>
-  `;
+    const cardContent =
+    `
+    <article class="card ${edit ? `card--edit` : ``} ${repeatDays ? `card--repeat` : ``}">
+      <form class="card__form" method="get">
+        <div class="card__inner">
+          ${cardElement.control}
+          ${cardElement.colorBar}
+          ${cardElement.textArea}
+          ${cardElement.settings}
+          ${cardElement.statusBtns}
+        </div>
+      </form>
+    </article>
+    `;
 
-  elementTemplate.innerHTML = cardContent;
-  CARDS_TEMPLATE.appendChild(elementTemplate.content);
-  }
+    elementTemplate.innerHTML = cardContent;
+    CARDS_TEMPLATE.appendChild(elementTemplate.content);
+  };
 
   const createCardElement = (cardsCount) => {
     let i = 0;
