@@ -5,7 +5,7 @@ const CARDS_AREA = document.querySelector(`.board__tasks`);
 const WEEKDAYS = [`mo`, `tu`, `we`, `th`, `fr`, `sa`, `su`];
 const COLORLIST = [`black`, `yellow`, `blue`, `green`, `pink`];
 
-const renderFilterElement = (data) => {
+const renderFilter = (data) => {
   data.forEach((item) => {
     const {caption, amount, checked = false} = item;
     const elementTemplate = document.createElement(`template`);
@@ -61,7 +61,7 @@ const filterElements = [
   },
 ];
 
-renderFilterElement(filterElements);
+renderFilter(filterElements);
 
 const cardData = {
   controls: [`edit`, `archive`, `favorites`],
@@ -272,13 +272,11 @@ const renderCardElement = (data) => {
 };
 
 const createCardElement = (cardsCount) => {
-  let i = 0;
-  while (i < cardsCount) {
+  for (let i = 0; i < cardCount; i++) {
     renderCardElement(cardData);
-    i++;
   }
 };
-createCardElement(1);
+createCardElement(7);
 
 const removeCards = () => {
   let cardsArray = CARDS_AREA.querySelectorAll(`.card`);
