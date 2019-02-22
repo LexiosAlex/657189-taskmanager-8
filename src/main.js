@@ -272,7 +272,7 @@ const renderCardElement = (data) => {
 };
 
 const createCardElement = (cardsCount) => {
-  for (let i = 0; i < cardCount; i++) {
+  for (let i = 0; i < cardsCount; i++) {
     renderCardElement(cardData);
   }
 };
