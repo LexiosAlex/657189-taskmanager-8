@@ -1,6 +1,6 @@
 import {FILTERS_AREA, CARDS_AREA, WEEKDAYS} from './export-const.js';
-import renderFilter from './src/render-filter.js';
-import renderCardElement from './src/render-card-element.js';
+import renderFilter from './render-filter.js';
+import renderCardElement from './render-card-element.js';
 
 const filterElements = [
   {
