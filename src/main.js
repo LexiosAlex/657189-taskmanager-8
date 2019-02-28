@@ -1,4 +1,4 @@
-import {FILTERS_AREA, CARDS_AREA, WEEKDAYS} from './export-const.js';
+import {FILTERS_AREA, CARDS_AREA, WEEKDAYS, COLORLIST} from './export-const.js';
 import renderFilter from './render-filter.js';
 import renderCardElement from './render-card-element.js';
 
@@ -36,23 +36,44 @@ const filterElements = [
 
 renderFilter(filterElements);
 
-const cardData = {
-  controls: [`edit`, `archive`, `favorites`],
-  color: `blue`,
-  weekdays: [`sun`, `mon`, `tue`, `wed`, `thu`, `fri`, `sat`],
-  id: 51,
-  repeatDays: {
-    [WEEKDAYS[2]]: true
-  },
-  edit: true,
-  text: `agsagsagda`,
-  hashtags: [`great`, `endlessHate`]
+const getRandomCardsData = (count) => {
+  const randomCardsData = [];
+  for (let i = 0; i < count; i++) {
+    let cardData = {
+      color: COLORLIST[Math.floor(Math.random() * COLORLIST.length)],
+      weekdays: [`sun`, `mon`, `tue`, `wed`, `thu`, `fri`, `sat`],
+      id: 51,
+      repeatDays: {
+        [WEEKDAYS[2]]: true
+      },
+      hashtags: new Set([
+        `cinema`,
+        `entertainment`,
+        `myself`,
+        `cinema`,
+      ]),
+      img: `//picsum.photos/100/100?r=${Math.random()}`,
+      title: [
+        `Learn the theory`,
+        `Do homework`,
+        `Do the 100% intensive`,
+      ][Math.floor(Math.random() * 3)],
+      date: Date.now() + 1 + Math.floor(Math.random() * 7) * 24 * 60 * 60 * 1000,
+      edit: false,
+      isFavorite: false,
+      isDone: false,
+    };
+    randomCardsData[i] = cardData;
+  }
+  return randomCardsData;
 };
 
+
 const createCardElement = (cardsCount) => {
-  for (let i = 0; i < cardsCount; i++) {
-    renderCardElement(cardData);
-  }
+  const randomCardsData = getRandomCardsData(cardsCount);
+  randomCardsData.forEach((it) => {
+    renderCardElement(it);
+  });
 };
 createCardElement(7);
 
