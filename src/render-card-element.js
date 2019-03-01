@@ -8,13 +8,9 @@ export default (data) => {
   const today = Date.now();
   let outDated = false;
 
-  const isoutDated = () => {
-    if (today > date) {
-      outDated = true;
-    }
-  };
-
-  isoutDated();
+  if (today > date) {
+    outDated = true;
+  }
 
   const convertedDate = new Date(date);
 
@@ -156,7 +152,7 @@ export default (data) => {
 
   settings.img =
   `
-    <label class="card__img-wrap ${img ? `${img}` : `card__img-wrap--empty`} ">
+    <label class="card__img-wrap ${img ? `` : `card__img-wrap--empty`} ">
       <input
         type="file"
         class="card__img-input visually-hidden"

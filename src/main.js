@@ -41,7 +41,6 @@ const getRandomCardsData = (count) => {
   for (let i = 0; i < count; i++) {
     let cardData = {
       color: COLORLIST[Math.floor(Math.random() * COLORLIST.length)],
-      weekdays: [`sun`, `mon`, `tue`, `wed`, `thu`, `fri`, `sat`],
       id: 51,
       repeatDays: {
         [WEEKDAYS[2]]: true
@@ -59,7 +58,6 @@ const getRandomCardsData = (count) => {
         `Do the 100% intensive`,
       ][Math.floor(Math.random() * 3)],
       date: Date.now() + 1 + Math.floor(Math.random() * 7) * 24 * 60 * 60 * 1000,
-      edit: false,
       isFavorite: false,
       isDone: false,
     };
