@@ -1,7 +1,7 @@
 import {CARDS_AREA, WEEKDAYS, COLORLIST, MONTHLIST} from './export-const.js';
 
-export default (data) => {
-  const {color, date, id, repeatDays, hashtags, img, edit, title, isFavorite, isDone} = data;
+export default (task) => {
+  const {color, date, id, repeatDays, hashtags, img, edit, title, isFavorite, isDone} = task;
   const elementTemplate = document.createElement(`template`);
   const cardElement = {};
   const repeatDaysCheck = repeatDays ? repeatDays : {};
