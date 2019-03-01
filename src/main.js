@@ -86,12 +86,9 @@ const addRandomCardsAmount = () => {
   createCardElement(Math.floor(Math.random() * 10));
 };
 
-const filtersListener = () => {
-  FILTERS_AREA.querySelectorAll(`.filter__input`).forEach((item) => {
-    item.addEventListener(`click`, () => {
-      removeCards();
-      addRandomCardsAmount();
-    });
+FILTERS_AREA.querySelectorAll(`.filter__input`).forEach((item) => {
+  item.addEventListener(`click`, () => {
+    removeCards();
+    addRandomCardsAmount();
   });
-};
-filtersListener();
+});

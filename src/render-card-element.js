@@ -1,5 +1,21 @@
 import {CARDS_AREA, WEEKDAYS, COLORLIST, MONTHLIST} from './export-const.js';
 
+const getUTCHours = (data) => {
+  if (data.getHours() > 12) {
+    return `PM`;
+  } else {
+    return `AM`;
+  }
+};
+
+const getUTCMinutes = (data) => {
+  if (data.getMinutes() < 10) {
+    return `0${data.getMinutes()}`;
+  } else {
+    return `${data.getMinutes()}`;
+  }
+};
+
 export default (task) => {
   const {color, date, id, repeatDays, hashtags, img, edit, title, isFavorite, isDone} = task;
   const elementTemplate = document.createElement(`template`);
@@ -14,21 +30,6 @@ export default (task) => {
 
   const convertedDate = new Date(date);
 
-  const getUTCHours = () => {
-    if (convertedDate.getHours() > 12) {
-      return `PM`;
-    } else {
-      return `AM`;
-    }
-  };
-
-  const getUTCMinutes = () => {
-    if (convertedDate.getMinutes() < 10) {
-      return `0${convertedDate.getMinutes()}`;
-    } else {
-      return `${convertedDate.getMinutes()}`;
-    }
-  };
 
   cardElement.control =
   `
@@ -94,7 +95,7 @@ export default (task) => {
             type="text"
             placeholder="11:15 PM"
             name="time"
-            ${date ? `value="${convertedDate.getHours()}:${getUTCMinutes()} ${getUTCHours()}"` : ``}
+            ${date ? `value="${convertedDate.getHours()}:${getUTCMinutes(convertedDate)} ${getUTCHours(convertedDate)}"` : ``}
           />
         </label>
       </fieldset>
