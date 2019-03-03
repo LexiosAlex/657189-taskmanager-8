@@ -1,19 +1,52 @@
-import {CARDS_AREA, WEEKDAYS, COLORLIST} from './export-const.js';
+import {CARDS_AREA, WEEKDAYS, COLORLIST, MONTHLIST} from './export-const.js';
 
-export default (data) => {
-  const {controls, color, date, id, repeatDays, hashtags = [], img, edit, text} = data;
+const getUTCHours = (data) => {
+  if (data.getHours() > 12) {
+    return `PM`;
+  } else {
+    return `AM`;
+  }
+};
+
+const getUTCMinutes = (data) => {
+  if (data.getMinutes() < 10) {
+    return `0${data.getMinutes()}`;
+  } else {
+    return `${data.getMinutes()}`;
+  }
+};
+
+export default (task) => {
+  const {color, date, id, repeatDays, hashtags, img, edit, title, isFavorite, isDone} = task;
   const elementTemplate = document.createElement(`template`);
   const cardElement = {};
   const repeatDaysCheck = repeatDays ? repeatDays : {};
+  const today = Date.now();
+  let outDated = false;
+
+  if (today > date) {
+    outDated = true;
+  }
+
+  const convertedDate = new Date(date);
+
 
   cardElement.control =
   `
   <div class="card__control">
-    ${controls.map((item) => `
-    <button type="button" class="card__btn card__btn--${item.toLowerCase()}">
-      ${item.toLowerCase()}
-    </button>`).join(``)}
-</div>
+    <button type="button" class="card__btn card__btn--edit">
+      edit
+    </button>
+    <button type="button" class="card__btn card__btn--archive">
+      archive
+    </button>
+    <button
+      type="button"
+      class="card__btn card__btn--favorites ${isFavorite ? `` : `card__btn--disabled`}"
+    >
+      favorites
+    </button>
+  </div>
   `;
 
   cardElement.colorBar =
@@ -33,13 +66,12 @@ export default (data) => {
       class="card__text"
       placeholder="Start typing your text here..."
       name="text"
-    >${text}</textarea>
+    >${title ? `${title}` : ``}</textarea>
   </label>
   </div>
   `;
 
   const settings = {};
-
   settings.details =
   `
   <div class="card__details">
@@ -54,7 +86,7 @@ export default (data) => {
             type="text"
             placeholder="23 September"
             name="date"
-            ${date ? `value="${date.day}"` : ``}
+            ${date ? `value="${convertedDate.getDate()} ${MONTHLIST[convertedDate.getMonth()].toUpperCase()}"` : ``}
           />
         </label>
         <label class="card__input-deadline-wrap">
@@ -63,7 +95,7 @@ export default (data) => {
             type="text"
             placeholder="11:15 PM"
             name="time"
-            ${date ? `value="${date.time}"` : ``}
+            ${date ? `value="${convertedDate.getHours()}:${getUTCMinutes(convertedDate)} ${getUTCHours(convertedDate)}"` : ``}
           />
         </label>
       </fieldset>
@@ -90,7 +122,7 @@ export default (data) => {
     </div>
     <div class="card__hashtag">
       <div class="card__hashtag-list">
-        ${hashtags.map((hashtag) => `
+        ${[...hashtags].map((hashtag) => `
           <span class="card__hashtag-inner">
             <input
               type="hidden"
@@ -128,7 +160,7 @@ export default (data) => {
         name="img"
       />
       <img
-        src=" ${img ? `img` : `img/add-photo.svg`}"
+        src=" ${img ? `${img}` : `img/add-photo.svg`}"
         alt="task picture"
         class="card__img"
       />
@@ -178,7 +210,7 @@ export default (data) => {
 
   const cardContent =
   `
-  <article class="card ${edit ? `card--edit` : ``} ${repeatDays ? `card--repeat` : ``}">
+  <article class="card ${edit ? `card--edit` : ``} ${repeatDays ? `card--repeat` : ``} card--${color} card--${outDated ? `deadline` : ``} card--${isDone ? `done` : ``}">
     <form class="card__form" method="get">
       <div class="card__inner">
         ${cardElement.control}
