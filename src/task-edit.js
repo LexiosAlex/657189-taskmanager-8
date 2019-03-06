@@ -1,9 +1,9 @@
-import {MONTHLIST} from './export-const.js';
+import {WEEKDAYS, COLORLIST, MONTHLIST} from './export-const.js';
 import getUTCHours from './get-utc-hours.js';
 import getUTCMinutes from './get-utc-minutes.js';
 import createElement from './create-element.js';
 
-export default class Task {
+export default class TaskEdit {
   constructor(task) {
     this._color = task.color;
     this._date = task.date;
@@ -11,15 +11,41 @@ export default class Task {
     this._hashtags = task.hashtags;
     this._img = task.img;
     this._title = task.title;
-    this._id = task.id;
     this._element = null;
+    this._id = task.id;
 
     this._state = {
       isFavorite: false,
       isDone: false,
     };
 
-    this._onEdit = null;
+    this._element = null;
+    this._onSubmit = null;
+  }
+
+  _onSubmitButtonClick(evt) {
+    evt.preventDefault();
+    typeof this._onSubmit === `function` && this._onSubmit();
+  }
+
+  _isRepeated() {
+    return Object.values(this._repeatingDays).some(it => it === true);
+  }
+
+  set onSubmit(fn) {
+    this._onSubmit = fn;
+  }
+
+  get element() {
+    return this._element;
+  }
+
+  _onEditButtonClick() {
+    typeof this._onEdit === `function` && this._onEdit();
+  }
+
+  set onEdit(fn) {
+    this._onEdit = fn;
   }
 
   _isRepeated() {
@@ -35,20 +61,10 @@ export default class Task {
     }
   }
 
-  _onEditButtonClick() {
-    typeof this._onEdit === `function` && this._onEdit();
-  }
-
-  get element() {
-    return this._element;
-  }
-
-  set onEdit(fn) {
-    this._onEdit = fn;
-  }
-
   get template() {
     const convertedDate = new Date(this._date);
+    const repeatDaysCheck = this._repeatDays ? this._repeatDays : {};
+
     const cardElement = {};
     cardElement.control =
     `
@@ -121,6 +137,23 @@ export default class Task {
         <button class="card__repeat-toggle" type="button">
           repeat:<span class="card__repeat-status">${this._repeatDays ? `YES` : `NO`}</span>
         </button>
+        <fieldset class="card__repeat-days" ${this._repeatDays ? `` : `disabled`}>
+          <div class="card__repeat-days-inner">
+            ${WEEKDAYS.map((day) => `
+              <input
+                class="visually-hidden card__repeat-day-input"
+                type="checkbox"
+                id="repeat-${day}-${this._id}"
+                name="repeat"
+                value=${day}
+                ${repeatDaysCheck[day] ? `checked` : ``}
+              />
+              <label class="card__repeat-day" for="repeat-${day}-${this._id}"
+                >${day}</label
+              >
+            `).join(``)}
+          </div>
+        </fieldset>
       </div>
       <div class="card__hashtag">
         <div class="card__hashtag-list">
@@ -169,11 +202,36 @@ export default class Task {
       </label>
     `;
 
+    settings.colors =
+    `
+      <div class="card__colors-inner">
+        <h3 class="card__colors-title">Color</h3>
+        <div class="card__colors-wrap">
+          ${COLORLIST.map((el) => `
+          <input
+            type="radio"
+            id="color-${el}-${this._id}"
+            class="card__color-input card__color-input--${el} visually-hidden"
+            name="color"
+            value=${el}
+            ${this._color === el ? `checked` : ``}
+          />
+          <label
+            for="color-${el}-${this._id}"
+            class="card__color card__color--${el}"
+            >${el}</label
+          >
+          `).join(``)}
+        </div>
+      </div>
+    `;
+
     cardElement.settings =
     `
     <div class="card__settings">
       ${settings.details}
       ${settings.img}
+      ${settings.colors}
     </div>
     `;
 
@@ -187,7 +245,7 @@ export default class Task {
 
     const cardContent =
     `
-    <article class="card ${this._isRepeated() ? `card--repeat` : ``} card--${this._color} ${this._isOutDated() ? `card--deadline` : ``} ${this._stateisDone ? `card--done` : ``}">
+    <article class="card card--edit ${this._isRepeated() ? `card--repeat` : ``} card--${this._color} ${this._isOutDated() ? `card--deadline` : ``} ${this._stateisDone ? `card--done` : ``}">
       <form class="card__form" method="get">
         <div class="card__inner">
           ${cardElement.control}
@@ -203,25 +261,29 @@ export default class Task {
     return cardContent.trim();
   }
 
-  bind() {
-    this._element.querySelector(`.card__btn--edit`)
-        .addEventListener(`click`, this._onEditButtonClick.bind(this));
-  }
-
   render() {
     this._element = createElement(this.template);
     this.bind();
     return this._element;
   }
 
-  unbind() {
-    this._element.querySelector(`.card__btn--edit`)
-      .removeEventListener(`click`, this._onEditButtonClick.bind(this));
-  }
-
   unrender() {
     this.unbind();
     this._element = null;
+  }
+
+  bind() {
+    this._element.querySelector(`.card__form`)
+      .addEventListener(`submit`, this._onSubmitButtonClick.bind(this));
+    this._element.querySelector(`.card__btn--edit`)
+      .addEventListener(`click`, this._onEditButtonClick.bind(this));
+  }
+
+  unbind() {
+    this._element.querySelector(`.card__form`)
+      .removeEventListener(`submit`, this._onSubmitButtonClick.bind(this));
+    this._element.querySelector(`.card__btn--edit`)
+      .removeEventListener(`click`, this._onEditButtonClick.bind(this));
   }
 
 }

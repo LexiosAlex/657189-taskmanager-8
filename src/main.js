@@ -1,6 +1,7 @@
 import {FILTERS_AREA, CARDS_AREA, WEEKDAYS, COLORLIST} from './export-const.js';
 import renderFilter from './render-filter.js';
 import Task from './render-card-element.js';
+import TaskEdit from './task-edit.js';
 
 const filterElements = [
   {
@@ -67,11 +68,31 @@ const getRandomCardsData = (count) => {
 const createCardElement = (cardsCount) => {
   const randomCardsData = getRandomCardsData(cardsCount);
   randomCardsData.forEach((it) => {
-    let newTask = new Task(it);
-    newTask.render(CARDS_AREA);
+    let taskComponent = new Task(it);
+    let editTaskComponent = new TaskEdit(it);
+
+    CARDS_AREA.appendChild(taskComponent.render());
+
+    taskComponent.onEdit = () => {
+      editTaskComponent.render();
+      CARDS_AREA.replaceChild(editTaskComponent.element, taskComponent.element);
+      taskComponent.unrender();
+    };
+
+    editTaskComponent.onEdit = () => {
+      taskComponent.render();
+      CARDS_AREA.replaceChild(taskComponent.element, editTaskComponent.element);
+      editTaskComponent.unrender();
+    };
+
+    editTaskComponent.onSubmit = () => {
+      taskComponent.render();
+      CARDS_AREA.replaceChild(taskComponent.element, editTaskComponent.element);
+      editTaskComponent.unrender();
+    };
   });
 };
-createCardElement(1);
+createCardElement(7);
 
 const removeCards = () => {
   let cardsArray = CARDS_AREA.querySelectorAll(`.card`);
@@ -90,27 +111,3 @@ FILTERS_AREA.querySelectorAll(`.filter__input`).forEach((item) => {
     addRandomCardsAmount();
   });
 });
-
-// let cardData = {
-//   color: COLORLIST[Math.floor(Math.random() * COLORLIST.length)],
-//   repeatDays: {
-//     [WEEKDAYS[2]]: true
-//   },
-//   hashtags: new Set([
-//     `cinema`,
-//     `entertainment`,
-//     `myself`,
-//     `cinema`,
-//   ]),
-//   img: `//picsum.photos/100/100?r=${Math.random()}`,
-//   title: [
-//     `Learn the theory`,
-//     `Do homework`,
-//     `Do the 100% intensive`,
-//   ][Math.floor(Math.random() * 3)],
-//   date: Date.now() + 1 + Math.floor(Math.random() * 7) * 24 * 60 * 60 * 1000,
-//   id: 51,
-// };
-
-// const firstTask = new Task(cardData);
-// firstTask.render(CARDS_AREA);
