@@ -1,6 +1,6 @@
 import {FILTERS_AREA, CARDS_AREA, WEEKDAYS, COLORLIST} from './export-const.js';
 import renderFilter from './render-filter.js';
-import renderCardElement from './render-card-element.js';
+import Task from './render-card-element.js';
 
 const filterElements = [
   {
@@ -41,7 +41,6 @@ const getRandomCardsData = (count) => {
   for (let i = 0; i < count; i++) {
     let cardData = {
       color: COLORLIST[Math.floor(Math.random() * COLORLIST.length)],
-      id: 51,
       repeatDays: {
         [WEEKDAYS[2]]: true
       },
@@ -58,22 +57,21 @@ const getRandomCardsData = (count) => {
         `Do the 100% intensive`,
       ][Math.floor(Math.random() * 3)],
       date: Date.now() + 1 + Math.floor(Math.random() * 7) * 24 * 60 * 60 * 1000,
-      isFavorite: false,
-      isDone: false,
+      id: 51,
     };
     randomCardsData[i] = cardData;
   }
   return randomCardsData;
 };
 
-
 const createCardElement = (cardsCount) => {
   const randomCardsData = getRandomCardsData(cardsCount);
   randomCardsData.forEach((it) => {
-    renderCardElement(it);
+    let newTask = new Task(it);
+    newTask.render(CARDS_AREA);
   });
 };
-createCardElement(7);
+createCardElement(1);
 
 const removeCards = () => {
   let cardsArray = CARDS_AREA.querySelectorAll(`.card`);
@@ -92,3 +90,27 @@ FILTERS_AREA.querySelectorAll(`.filter__input`).forEach((item) => {
     addRandomCardsAmount();
   });
 });
+
+// let cardData = {
+//   color: COLORLIST[Math.floor(Math.random() * COLORLIST.length)],
+//   repeatDays: {
+//     [WEEKDAYS[2]]: true
+//   },
+//   hashtags: new Set([
+//     `cinema`,
+//     `entertainment`,
+//     `myself`,
+//     `cinema`,
+//   ]),
+//   img: `//picsum.photos/100/100?r=${Math.random()}`,
+//   title: [
+//     `Learn the theory`,
+//     `Do homework`,
+//     `Do the 100% intensive`,
+//   ][Math.floor(Math.random() * 3)],
+//   date: Date.now() + 1 + Math.floor(Math.random() * 7) * 24 * 60 * 60 * 1000,
+//   id: 51,
+// };
+
+// const firstTask = new Task(cardData);
+// firstTask.render(CARDS_AREA);
