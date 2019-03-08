@@ -21,15 +21,17 @@ export default class TaskEdit {
 
     this._element = null;
     this._onSubmit = null;
+    this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
+    this._onEditButtonClick = this._onEditButtonClick.bind(this);
   }
 
   _onSubmitButtonClick(evt) {
     evt.preventDefault();
-    typeof this._onSubmit === `function` && this._onSubmit();
+    return typeof this._onSubmit === `function` && this._onSubmit();
   }
 
   _isRepeated() {
-    return Object.values(this._repeatingDays).some(it => it === true);
+    return Object.values(this._repeatingDays).some((it) => it === true);
   }
 
   set onSubmit(fn) {
@@ -41,7 +43,7 @@ export default class TaskEdit {
   }
 
   _onEditButtonClick() {
-    typeof this._onEdit === `function` && this._onEdit();
+    return typeof this._onEdit === `function` && this._onEdit();
   }
 
   set onEdit(fn) {
@@ -49,7 +51,7 @@ export default class TaskEdit {
   }
 
   _isRepeated() {
-    return Object.values(this._repeatDays).some(it => it === true);
+    return Object.values(this._repeatDays).some((it) => it === true);
   }
 
   _isOutDated() {
@@ -274,16 +276,16 @@ export default class TaskEdit {
 
   bind() {
     this._element.querySelector(`.card__form`)
-      .addEventListener(`submit`, this._onSubmitButtonClick.bind(this));
+      .addEventListener(`submit`, this._onSubmitButtonClick);
     this._element.querySelector(`.card__btn--edit`)
-      .addEventListener(`click`, this._onEditButtonClick.bind(this));
+      .addEventListener(`click`, this._onEditButtonClick);
   }
 
   unbind() {
     this._element.querySelector(`.card__form`)
-      .removeEventListener(`submit`, this._onSubmitButtonClick.bind(this));
+      .removeEventListener(`submit`, this._onSubmitButtonClick);
     this._element.querySelector(`.card__btn--edit`)
-      .removeEventListener(`click`, this._onEditButtonClick.bind(this));
+      .removeEventListener(`click`, this._onEditButtonClick);
   }
 
 }

@@ -20,10 +20,11 @@ export default class Task {
     };
 
     this._onEdit = null;
+    this._onEditButtonClick = this._onEditButtonClick.bind(this);
   }
 
   _isRepeated() {
-    return Object.values(this._repeatDays).some(it => it === true);
+    return Object.values(this._repeatDays).some((it) => it === true);
   }
 
   _isOutDated() {
@@ -36,7 +37,7 @@ export default class Task {
   }
 
   _onEditButtonClick() {
-    typeof this._onEdit === `function` && this._onEdit();
+    return typeof this._onEdit === `function` && this._onEdit();
   }
 
   get element() {
@@ -205,7 +206,7 @@ export default class Task {
 
   bind() {
     this._element.querySelector(`.card__btn--edit`)
-        .addEventListener(`click`, this._onEditButtonClick.bind(this));
+        .addEventListener(`click`, this._onEditButtonClick);
   }
 
   render() {
@@ -216,7 +217,7 @@ export default class Task {
 
   unbind() {
     this._element.querySelector(`.card__btn--edit`)
-      .removeEventListener(`click`, this._onEditButtonClick.bind(this));
+      .removeEventListener(`click`, this._onEditButtonClick);
   }
 
   unrender() {
