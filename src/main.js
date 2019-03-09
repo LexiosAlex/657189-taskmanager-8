@@ -1,6 +1,6 @@
 import {FILTERS_AREA, CARDS_AREA, WEEKDAYS, COLORLIST} from './export-const.js';
 import renderFilter from './render-filter.js';
-import Task from './render-card-element.js';
+import Task from './task.js';
 import TaskEdit from './task-edit.js';
 
 const filterElements = [

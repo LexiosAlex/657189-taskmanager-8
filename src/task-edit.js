@@ -17,6 +17,7 @@ export default class TaskEdit {
     this._state = {
       isFavorite: false,
       isDone: false,
+      isOutDated: false,
     };
 
     this._element = null;
@@ -54,18 +55,13 @@ export default class TaskEdit {
     return Object.values(this._repeatDays).some((it) => it === true);
   }
 
-  _isOutDated() {
-    const today = Date.now();
-    if (today > this._date) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
   get template() {
     const convertedDate = new Date(this._date);
     const repeatDaysCheck = this._repeatDays ? this._repeatDays : {};
+    const today = Date.now();
+    if (today > this._date) {
+      this._state.isOutDated = true;
+    }
 
     const cardElement = {};
     cardElement.control =
@@ -247,7 +243,7 @@ export default class TaskEdit {
 
     const cardContent =
     `
-    <article class="card card--edit ${this._isRepeated() ? `card--repeat` : ``} card--${this._color} ${this._isOutDated() ? `card--deadline` : ``} ${this._stateisDone ? `card--done` : ``}">
+    <article class="card card--edit ${this._isRepeated() ? `card--repeat` : ``} card--${this._color} ${this._state.isOutDated ? `card--deadline` : ``} ${this._stateisDone ? `card--done` : ``}">
       <form class="card__form" method="get">
         <div class="card__inner">
           ${cardElement.control}
