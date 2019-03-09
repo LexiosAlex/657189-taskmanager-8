@@ -1,6 +1,7 @@
 import {FILTERS_AREA, CARDS_AREA, WEEKDAYS, COLORLIST} from './export-const.js';
 import renderFilter from './render-filter.js';
-import renderCardElement from './render-card-element.js';
+import Task from './task.js';
+import TaskEdit from './task-edit.js';
 
 const filterElements = [
   {
@@ -41,7 +42,6 @@ const getRandomCardsData = (count) => {
   for (let i = 0; i < count; i++) {
     let cardData = {
       color: COLORLIST[Math.floor(Math.random() * COLORLIST.length)],
-      id: 51,
       repeatDays: {
         [WEEKDAYS[2]]: true
       },
@@ -58,19 +58,38 @@ const getRandomCardsData = (count) => {
         `Do the 100% intensive`,
       ][Math.floor(Math.random() * 3)],
       date: Date.now() + 1 + Math.floor(Math.random() * 7) * 24 * 60 * 60 * 1000,
-      isFavorite: false,
-      isDone: false,
+      id: 51,
     };
     randomCardsData[i] = cardData;
   }
   return randomCardsData;
 };
 
-
 const createCardElement = (cardsCount) => {
   const randomCardsData = getRandomCardsData(cardsCount);
   randomCardsData.forEach((it) => {
-    renderCardElement(it);
+    let taskComponent = new Task(it);
+    let editTaskComponent = new TaskEdit(it);
+
+    CARDS_AREA.appendChild(taskComponent.render());
+
+    taskComponent.onEdit = () => {
+      editTaskComponent.render();
+      CARDS_AREA.replaceChild(editTaskComponent.element, taskComponent.element);
+      taskComponent.unrender();
+    };
+
+    editTaskComponent.onEdit = () => {
+      taskComponent.render();
+      CARDS_AREA.replaceChild(taskComponent.element, editTaskComponent.element);
+      editTaskComponent.unrender();
+    };
+
+    editTaskComponent.onSubmit = () => {
+      taskComponent.render();
+      CARDS_AREA.replaceChild(taskComponent.element, editTaskComponent.element);
+      editTaskComponent.unrender();
+    };
   });
 };
 createCardElement(7);
