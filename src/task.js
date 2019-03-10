@@ -2,9 +2,11 @@ import {MONTHLIST} from './export-const.js';
 import getUTCHours from './get-utc-hours.js';
 import getUTCMinutes from './get-utc-minutes.js';
 import createElement from './create-element.js';
+import Component from './component.js';
 
-export default class Task {
+export default class Task extends Component {
   constructor(task) {
+    super();
     this._color = task.color;
     this._date = task.date;
     this._repeatDays = task.repeatDays;
@@ -38,10 +40,6 @@ export default class Task {
 
   _onEditButtonClick() {
     return typeof this._onEdit === `function` && this._onEdit();
-  }
-
-  get element() {
-    return this._element;
   }
 
   set onEdit(fn) {
@@ -209,20 +207,9 @@ export default class Task {
         .addEventListener(`click`, this._onEditButtonClick);
   }
 
-  render() {
-    this._element = createElement(this.template);
-    this.bind();
-    return this._element;
-  }
-
   unbind() {
     this._element.querySelector(`.card__btn--edit`)
       .removeEventListener(`click`, this._onEditButtonClick);
-  }
-
-  unrender() {
-    this.unbind();
-    this._element = null;
   }
 
 }
