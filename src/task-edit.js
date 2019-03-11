@@ -55,8 +55,7 @@ export default class TaskEdit extends Component {
   get template() {
     const convertedDate = new Date(this._date);
     const repeatDaysCheck = this._repeatDays ? this._repeatDays : {};
-    const today = Date.now();
-    if (today > this._date) {
+    if (Date.now() > this._date) {
       this._state.isOutDated = true;
     }
 

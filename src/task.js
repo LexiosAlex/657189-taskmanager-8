@@ -18,6 +18,7 @@ export default class Task extends Component {
     this._state = {
       isFavorite: false,
       isDone: false,
+      isOutDated: false,
     };
 
     this._onEdit = null;
@@ -26,15 +27,6 @@ export default class Task extends Component {
 
   _isRepeated() {
     return Object.values(this._repeatDays).some((it) => it === true);
-  }
-
-  _isOutDated() {
-    const today = Date.now();
-    if (today > this._date) {
-      return true;
-    } else {
-      return false;
-    }
   }
 
   _onEditButtonClick() {
@@ -47,6 +39,9 @@ export default class Task extends Component {
 
   get template() {
     const convertedDate = new Date(this._date);
+    if (Date.now() > this._date) {
+      this._state.isOutDated = true;
+    }
     const cardElement = {};
     cardElement.control =
     `
@@ -185,7 +180,7 @@ export default class Task extends Component {
 
     const cardContent =
     `
-    <article class="card ${this._isRepeated() ? `card--repeat` : ``} card--${this._color} ${this._isOutDated() ? `card--deadline` : ``} ${this._stateisDone ? `card--done` : ``}">
+    <article class="card ${this._isRepeated() ? `card--repeat` : ``} card--${this._color} ${this._state.isOutDated ? `card--deadline` : ``} ${this._stateisDone ? `card--done` : ``}">
       <form class="card__form" method="get">
         <div class="card__inner">
           ${cardElement.control}
