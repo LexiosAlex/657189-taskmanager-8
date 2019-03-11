@@ -1,7 +1,6 @@
 import {MONTHLIST} from './export-const.js';
 import getUTCHours from './get-utc-hours.js';
 import getUTCMinutes from './get-utc-minutes.js';
-import createElement from './create-element.js';
 import Component from './component.js';
 
 export default class Task extends Component {
