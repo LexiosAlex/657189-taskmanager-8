@@ -1,10 +1,11 @@
 import {WEEKDAYS, COLORLIST, MONTHLIST} from './export-const.js';
 import getUTCHours from './get-utc-hours.js';
 import getUTCMinutes from './get-utc-minutes.js';
-import createElement from './create-element.js';
+import Component from './component.js';
 
-export default class TaskEdit {
+export default class TaskEdit extends Component {
   constructor(task) {
+    super();
     this._color = task.color;
     this._date = task.date;
     this._repeatDays = task.repeatDays;
@@ -39,10 +40,6 @@ export default class TaskEdit {
     this._onSubmit = fn;
   }
 
-  get element() {
-    return this._element;
-  }
-
   _onEditButtonClick() {
     return typeof this._onEdit === `function` && this._onEdit();
   }
@@ -58,8 +55,7 @@ export default class TaskEdit {
   get template() {
     const convertedDate = new Date(this._date);
     const repeatDaysCheck = this._repeatDays ? this._repeatDays : {};
-    const today = Date.now();
-    if (today > this._date) {
+    if (Date.now() > this._date) {
       this._state.isOutDated = true;
     }
 
@@ -257,17 +253,6 @@ export default class TaskEdit {
     `;
 
     return cardContent.trim();
-  }
-
-  render() {
-    this._element = createElement(this.template);
-    this.bind();
-    return this._element;
-  }
-
-  unrender() {
-    this.unbind();
-    this._element = null;
   }
 
   bind() {
