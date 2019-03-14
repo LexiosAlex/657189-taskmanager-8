@@ -67,9 +67,9 @@ const getRandomCardsData = (count) => {
 
 const createCardElement = (cardsCount) => {
   const randomCardsData = getRandomCardsData(cardsCount);
-  randomCardsData.forEach((it) => {
-    let taskComponent = new Task(it);
-    let editTaskComponent = new TaskEdit(it);
+  randomCardsData.forEach((task) => {
+    let taskComponent = new Task(task);
+    let editTaskComponent = new TaskEdit(task);
 
     CARDS_AREA.appendChild(taskComponent.render());
 
@@ -85,14 +85,21 @@ const createCardElement = (cardsCount) => {
       editTaskComponent.unrender();
     };
 
-    editTaskComponent.onSubmit = () => {
+    editTaskComponent.onSubmit = (newObject) => {
+      task.title = newObject.title;
+      task.hashtags = newObject.hashtags;
+      task.color = newObject.color;
+      task.repeatingDays = newObject.repeatingDays;
+      task.date = newObject.date;
+
+      taskComponent.update(task);
       taskComponent.render();
       CARDS_AREA.replaceChild(taskComponent.element, editTaskComponent.element);
       editTaskComponent.unrender();
-    };
+    }
   });
 };
-createCardElement(7);
+createCardElement(1);
 
 const removeCards = () => {
   let cardsArray = CARDS_AREA.querySelectorAll(`.card`);

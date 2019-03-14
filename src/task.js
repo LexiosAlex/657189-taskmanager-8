@@ -8,7 +8,7 @@ export default class Task extends Component {
     super();
     this._color = task.color;
     this._date = task.date;
-    this._repeatDays = task.repeatDays;
+    this._repeatingDays = task.repeatDays;
     this._hashtags = task.hashtags;
     this._img = task.img;
     this._title = task.title;
@@ -16,6 +16,7 @@ export default class Task extends Component {
     this._element = null;
 
     this._state = {
+      isDate: false,
       isFavorite: false,
       isDone: false,
       isOutDated: false,
@@ -26,7 +27,9 @@ export default class Task extends Component {
   }
 
   _isRepeated() {
-    return Object.values(this._repeatDays).some((it) => it === true);
+    if (this._repeatingDays){
+      return Object.values(this._repeatingDays).some((it) => it === true);
+    }
   }
 
   _onEditButtonClick() {
@@ -37,11 +40,27 @@ export default class Task extends Component {
     this._onEdit = fn;
   }
 
-  get template() {
-    const convertedDate = new Date(this._date);
+  stateCheck() {
     if (Date.now() > this._date) {
       this._state.isOutDated = true;
     }
+
+    if (Date.now() > this._date) {
+      this._state.isOutDated = true;
+    }
+
+    if (this._repeatingDays) {
+      this._state.isRepeated = true;
+    }
+
+    if (this._date) {
+      this._state.isDate = true;
+    }
+  }
+
+  get template() {
+    const convertedDate = new Date(this._date);
+
     const cardElement = {};
     cardElement.control =
     `
@@ -89,9 +108,9 @@ export default class Task extends Component {
     <div class="card__details">
       <div class="card__dates">
         <button class="card__date-deadline-toggle" type="button">
-          date: <span class="card__date-status">${this._date ? `YES` : `NO`}</span>
+          date: <span class="card__date-status">${this._state.isDate ? `YES` : `NO`}</span>
         </button>
-        <fieldset class="card__date-deadline" ${this._date ? `` : `disabled`}>
+        <fieldset class="card__date-deadline" ${this._state.isDate ? `` : `disabled`}>
           <label class="card__input-deadline-wrap">
             <input
               class="card__date"
@@ -112,7 +131,7 @@ export default class Task extends Component {
           </label>
         </fieldset>
         <button class="card__repeat-toggle" type="button">
-          repeat:<span class="card__repeat-status">${this._repeatDays ? `YES` : `NO`}</span>
+          repeat:<span class="card__repeat-status">${this._repeatingDays ? `YES` : `NO`}</span>
         </button>
       </div>
       <div class="card__hashtag">
@@ -204,6 +223,13 @@ export default class Task extends Component {
   unbind() {
     this._element.querySelector(`.card__btn--edit`)
       .removeEventListener(`click`, this._onEditButtonClick);
+  }
+
+  update(data) {
+    this._title = data.title;
+    this._hashtags = data.hashtags;
+    this._color = data.color;
+    this._repeatingDays = data.repeatingDays;
   }
 
 }

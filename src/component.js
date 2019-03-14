@@ -19,7 +19,10 @@ export default class Component {
     throw new Error(`You have to define template.`);
   }
 
+  stateCheck() {}
+
   render() {
+    this.stateCheck();
     this._element = createElement(this.template);
     this.bind();
     return this._element;
@@ -34,4 +37,6 @@ export default class Component {
     this._element.remove();
     this._element = null;
   }
+
+  update() {}
 }
