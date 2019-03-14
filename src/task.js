@@ -7,7 +7,7 @@ export default class Task extends Component {
   constructor(task) {
     super();
     this._color = task.color;
-    this._date = task.date;
+    this._dueDate = task.date;
     this._repeatingDays = task.repeatDays;
     this._hashtags = task.hashtags;
     this._img = task.img;
@@ -27,7 +27,7 @@ export default class Task extends Component {
   }
 
   _isRepeated() {
-    if (this._repeatingDays){
+    if (this._repeatingDays) {
       return Object.values(this._repeatingDays).some((it) => it === true);
     }
   }
@@ -41,11 +41,11 @@ export default class Task extends Component {
   }
 
   stateCheck() {
-    if (Date.now() > this._date) {
+    if (Date.now() > this._dueDate) {
       this._state.isOutDated = true;
     }
 
-    if (Date.now() > this._date) {
+    if (Date.now() > this._dueDate) {
       this._state.isOutDated = true;
     }
 
@@ -53,13 +53,13 @@ export default class Task extends Component {
       this._state.isRepeated = true;
     }
 
-    if (this._date) {
+    if (this._dueDate) {
       this._state.isDate = true;
     }
   }
 
   get template() {
-    const convertedDate = new Date(this._date);
+    const convertedDate = new Date(this._dueDate);
 
     const cardElement = {};
     cardElement.control =
@@ -117,7 +117,7 @@ export default class Task extends Component {
               type="text"
               placeholder="23 September"
               name="date"
-              ${this._date ? `value="${convertedDate.getDate()} ${MONTHLIST[convertedDate.getMonth()].toUpperCase()}"` : ``}
+              ${this._dueDate ? `value="${convertedDate.getDate()} ${MONTHLIST[convertedDate.getMonth()].toUpperCase()}"` : ``}
             />
           </label>
           <label class="card__input-deadline-wrap">
@@ -126,7 +126,7 @@ export default class Task extends Component {
               type="text"
               placeholder="11:15 PM"
               name="time"
-              ${this._date ? `value="${convertedDate.getHours()}:${getUTCMinutes(convertedDate)} ${getUTCHours(convertedDate)}"` : ``}
+              ${this._dueDate ? `value="${convertedDate.getHours()}:${getUTCMinutes(convertedDate)} ${getUTCHours(convertedDate)}"` : ``}
             />
           </label>
         </fieldset>

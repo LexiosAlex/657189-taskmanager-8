@@ -7,7 +7,7 @@ export default class TaskEdit extends Component {
   constructor(task) {
     super();
     this._color = task.color;
-    this._date = task.date;
+    this._dueDate = task.date;
     this._repeatingDays = task.repeatDays;
     this._hashtags = task.hashtags;
     this._img = task.img;
@@ -78,9 +78,8 @@ export default class TaskEdit extends Component {
 
     const formData = new FormData(this._element.querySelector(`.card__form`));
     const newData = this._processForm(formData);
-    return typeof this._onSubmit === `function` && this._onSubmit(newData);
-
     this.update(newData);
+    return typeof this._onSubmit === `function` && this._onSubmit(newData);
   }
 
   _isRepeated() {
@@ -106,7 +105,7 @@ export default class TaskEdit extends Component {
   }
 
   stateCheck() {
-    if (Date.now() > this._date) {
+    if (Date.now() > this._dueDate) {
       this._state.isOutDated = true;
     }
 
@@ -114,13 +113,13 @@ export default class TaskEdit extends Component {
       this._state.isRepeated = true;
     }
 
-    if (this._date) {
+    if (this._dueDate) {
       this._state.isDate = true;
     }
   }
 
   get template() {
-    const convertedDate = new Date(this._date);
+    const convertedDate = new Date(this._dueDate);
     const repeatDaysCheck = this._repeatingDays ? this._repeatingDays : {};
 
     const cardElement = {};
@@ -179,7 +178,7 @@ export default class TaskEdit extends Component {
               type="text"
               placeholder="23 September"
               name="date"
-              ${this._date ? `value="${convertedDate.getDate()} ${MONTHLIST[convertedDate.getMonth()].toUpperCase()}"` : ``}
+              ${this._dueDate ? `value="${convertedDate.getDate()} ${MONTHLIST[convertedDate.getMonth()].toUpperCase()}"` : ``}
             />
           </label>
           <label class="card__input-deadline-wrap">
@@ -188,7 +187,7 @@ export default class TaskEdit extends Component {
               type="text"
               placeholder="11:15 PM"
               name="time"
-              ${this._date ? `value="${convertedDate.getHours()}:${getUTCMinutes(convertedDate)} ${getUTCHours(convertedDate)}"` : ``}
+              ${this._dueDate ? `value="${convertedDate.getHours()}:${getUTCMinutes(convertedDate)} ${getUTCHours(convertedDate)}"` : ``}
             />
           </label>
         </fieldset>
@@ -346,7 +345,7 @@ export default class TaskEdit extends Component {
     this._hashtags = data.hashtags;
     this._color = data.color;
     this._repeatingDays = data.repeatingDays;
-    this._date = data.date;
+    this._dueDate = data.dueDate;
   }
 
   static createMapper(target) {
@@ -357,7 +356,7 @@ export default class TaskEdit extends Component {
       repeat: (value) => target.repeatingDays[value] = true,
       date: (value) => target.date[value],
 
-    }
+    };
   }
 
 }

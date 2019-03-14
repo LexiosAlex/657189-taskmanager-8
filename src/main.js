@@ -96,7 +96,7 @@ const createCardElement = (cardsCount) => {
       taskComponent.render();
       CARDS_AREA.replaceChild(taskComponent.element, editTaskComponent.element);
       editTaskComponent.unrender();
-    }
+    };
   });
 };
 createCardElement(1);
