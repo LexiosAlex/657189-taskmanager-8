@@ -57,7 +57,7 @@ const getRandomCardsData = (count) => {
         `Do homework`,
         `Do the 100% intensive`,
       ][Math.floor(Math.random() * 3)],
-      date: Date.now() + 1 + Math.floor(Math.random() * 7) * 24 * 60 * 60 * 1000,
+      dueDate: Date.now() + 1 + Math.floor(Math.random() * 7) * 24 * 60 * 60 * 1000,
       id: 51,
     };
     randomCardsData[i] = cardData;
@@ -90,7 +90,7 @@ const createCardElement = (cardsCount) => {
       task.hashtags = newObject.hashtags;
       task.color = newObject.color;
       task.repeatingDays = newObject.repeatingDays;
-      task.date = newObject.date;
+      task.dueDate = newObject.dueDate;
 
       taskComponent.update(task);
       taskComponent.render();

@@ -7,7 +7,7 @@ export default class Task extends Component {
   constructor(task) {
     super();
     this._color = task.color;
-    this._dueDate = task.date;
+    this._dueDate = task.dueDate;
     this._repeatingDays = task.repeatDays;
     this._hashtags = task.hashtags;
     this._img = task.img;

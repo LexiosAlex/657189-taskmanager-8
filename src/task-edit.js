@@ -1,3 +1,4 @@
+import flatpickr from "flatpickr";
 import {WEEKDAYS, COLORLIST, MONTHLIST} from './export-const.js';
 import getUTCHours from './get-utc-hours.js';
 import getUTCMinutes from './get-utc-minutes.js';
@@ -7,7 +8,7 @@ export default class TaskEdit extends Component {
   constructor(task) {
     super();
     this._color = task.color;
-    this._dueDate = task.date;
+    this._dueDate = task.dueDate;
     this._repeatingDays = task.repeatDays;
     this._hashtags = task.hashtags;
     this._img = task.img;
@@ -75,7 +76,6 @@ export default class TaskEdit extends Component {
 
   _onSubmitButtonClick(evt) {
     evt.preventDefault();
-
     const formData = new FormData(this._element.querySelector(`.card__form`));
     const newData = this._processForm(formData);
     this.update(newData);
@@ -109,7 +109,7 @@ export default class TaskEdit extends Component {
       this._state.isOutDated = true;
     }
 
-    if (this._repeatingDays) {
+    if (Object.values(this._repeatingDays).some((it) => it === true)) {
       this._state.isRepeated = true;
     }
 
@@ -219,7 +219,7 @@ export default class TaskEdit extends Component {
               <input
                 type="hidden"
                 name="hashtag"
-                value="repeat"
+                value="${hashtag}"
                 class="card__hashtag-hidden-input"
               />
               <button type="button" class="card__hashtag-name">
@@ -327,6 +327,10 @@ export default class TaskEdit extends Component {
         .addEventListener(`click`, this._onChangeDate);
     this._element.querySelector(`.card__repeat-toggle`)
         .addEventListener(`click`, this._onChangeRepeated);
+    if (this._state.isDate) {
+      flatpickr(`.card__date`, {altInput: true, altFormat: `j F`, dateFormat: `j F`});
+      flatpickr(`.card__time`, {enableTime: true, noCalendar: true, altInput: true, altFormat: `h:i K`, dateFormat: `h:i K`});
+    }
   }
 
   unbind() {
@@ -351,9 +355,15 @@ export default class TaskEdit extends Component {
   static createMapper(target) {
     return {
       hashtag: (value) => target.hashtags.add(value),
-      text: (value) => target.title = value,
-      color: (value) => target.color = value,
-      repeat: (value) => target.repeatingDays[value] = true,
+      text: (value) => {
+        target.title = value;
+      },
+      color: (value) => {
+        target.color = value;
+      },
+      repeat: (value) => {
+        target.repeatingDays[value] = true;
+      },
       date: (value) => target.date[value],
 
     };
