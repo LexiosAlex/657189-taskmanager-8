@@ -1,7 +1,5 @@
-import {MONTHLIST} from './export-const.js';
-import getUTCHours from './get-utc-hours.js';
-import getUTCMinutes from './get-utc-minutes.js';
 import Component from './component.js';
+const moment = require(`moment`);
 
 export default class Task extends Component {
   constructor(task) {
@@ -30,6 +28,7 @@ export default class Task extends Component {
     if (this._repeatingDays) {
       return Object.values(this._repeatingDays).some((it) => it === true);
     }
+    return false;
   }
 
   _onEditButtonClick() {
@@ -40,7 +39,7 @@ export default class Task extends Component {
     this._onEdit = fn;
   }
 
-  stateCheck() {
+  stateUpdate() {
     if (Date.now() > this._dueDate) {
       this._state.isOutDated = true;
     }
@@ -59,7 +58,7 @@ export default class Task extends Component {
   }
 
   get template() {
-    const convertedDate = new Date(this._dueDate);
+    this.stateUpdate();
 
     const cardElement = {};
     cardElement.control =
@@ -117,7 +116,7 @@ export default class Task extends Component {
               type="text"
               placeholder="23 September"
               name="date"
-              ${this._dueDate ? `value="${convertedDate.getDate()} ${MONTHLIST[convertedDate.getMonth()].toUpperCase()}"` : ``}
+              ${this._dueDate ? `value="${moment.unix(this._dueDate / 1000).format(`DD MMMM`)}"` : ``}
             />
           </label>
           <label class="card__input-deadline-wrap">
@@ -126,7 +125,7 @@ export default class Task extends Component {
               type="text"
               placeholder="11:15 PM"
               name="time"
-              ${this._dueDate ? `value="${convertedDate.getHours()}:${getUTCMinutes(convertedDate)} ${getUTCHours(convertedDate)}"` : ``}
+              ${this._dueDate ? `value="${moment.unix(this._dueDate / 1000).format(`LT`)}"` : ``}
             />
           </label>
         </fieldset>

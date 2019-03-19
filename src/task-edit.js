@@ -1,8 +1,7 @@
-import flatpickr from "flatpickr";
-import {WEEKDAYS, COLORLIST, MONTHLIST} from './export-const.js';
-import getUTCHours from './get-utc-hours.js';
-import getUTCMinutes from './get-utc-minutes.js';
+import {WEEKDAYS, COLORLIST} from './export-const.js';
 import Component from './component.js';
+const moment = require(`moment`);
+const flatpickr = require(`flatpickr`);
 
 export default class TaskEdit extends Component {
   constructor(task) {
@@ -68,7 +67,9 @@ export default class TaskEdit extends Component {
 
     for (const pair of formData.entries()) {
       const [property, value] = pair;
-      taskEditMapper[property] && taskEditMapper[property](value);
+      if (typeof taskEditMapper[property] === `function`) {
+        taskEditMapper[property](value);
+      }
     }
 
     return entry;
@@ -86,6 +87,7 @@ export default class TaskEdit extends Component {
     if (this._repeatingDays) {
       return Object.values(this._repeatingDays).some((it) => it === true);
     }
+    return false;
   }
 
   set onSubmit(fn) {
@@ -104,7 +106,7 @@ export default class TaskEdit extends Component {
     this._element.innerHTML = this.template;
   }
 
-  stateCheck() {
+  stateUpdate() {
     if (Date.now() > this._dueDate) {
       this._state.isOutDated = true;
     }
@@ -119,7 +121,6 @@ export default class TaskEdit extends Component {
   }
 
   get template() {
-    const convertedDate = new Date(this._dueDate);
     const repeatDaysCheck = this._repeatingDays ? this._repeatingDays : {};
 
     const cardElement = {};
@@ -178,7 +179,7 @@ export default class TaskEdit extends Component {
               type="text"
               placeholder="23 September"
               name="date"
-              ${this._dueDate ? `value="${convertedDate.getDate()} ${MONTHLIST[convertedDate.getMonth()].toUpperCase()}"` : ``}
+              ${this._dueDate ? `value="${moment.unix(this._dueDate / 1000).format(`DD MMMM`)}"` : ``}
             />
           </label>
           <label class="card__input-deadline-wrap">
@@ -187,7 +188,7 @@ export default class TaskEdit extends Component {
               type="text"
               placeholder="11:15 PM"
               name="time"
-              ${this._dueDate ? `value="${convertedDate.getHours()}:${getUTCMinutes(convertedDate)} ${getUTCHours(convertedDate)}"` : ``}
+              ${this._dueDate ? `value="${moment.unix(this._dueDate / 1000).format(`LT`)}"` : ``}
             />
           </label>
         </fieldset>

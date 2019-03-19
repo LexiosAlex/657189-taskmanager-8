@@ -19,10 +19,10 @@ export default class Component {
     throw new Error(`You have to define template.`);
   }
 
-  stateCheck() {}
+  stateUpdate() {}
 
   render() {
-    this.stateCheck();
+    this.stateUpdate();
     this._element = createElement(this.template);
     this.bind();
     return this._element;
