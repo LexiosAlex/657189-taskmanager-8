@@ -1,5 +1,5 @@
 import Component from './component.js';
-const moment = require(`moment`);
+import moment from 'moment';
 
 export default class Task extends Component {
   constructor(task) {

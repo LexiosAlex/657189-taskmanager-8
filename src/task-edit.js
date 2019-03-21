@@ -1,7 +1,7 @@
 import {WEEKDAYS, COLORLIST} from './export-const.js';
 import Component from './component.js';
-const moment = require(`moment`);
-const flatpickr = require(`flatpickr`);
+import moment from 'moment';
+import flatpickr from 'flatpickr';
 
 export default class TaskEdit extends Component {
   constructor(task) {
@@ -37,6 +37,12 @@ export default class TaskEdit extends Component {
     this.unbind();
     this._partialUpdate();
     this.bind();
+  }
+
+  _removeClandar() {
+    while (document.querySelector(`.flatpickr-calendar`)) {
+      document.querySelector(`.flatpickr-calendar`).remove();
+    }
   }
 
   _onChangeRepeated() {
@@ -80,6 +86,7 @@ export default class TaskEdit extends Component {
     const formData = new FormData(this._element.querySelector(`.card__form`));
     const newData = this._processForm(formData);
     this.update(newData);
+    this._removeClandar();
     return typeof this._onSubmit === `function` && this._onSubmit(newData);
   }
 
@@ -329,8 +336,8 @@ export default class TaskEdit extends Component {
     this._element.querySelector(`.card__repeat-toggle`)
         .addEventListener(`click`, this._onChangeRepeated);
     if (this._state.isDate) {
-      flatpickr(`.card__date`, {altInput: true, altFormat: `j F`, dateFormat: `j F`});
-      flatpickr(`.card__time`, {enableTime: true, noCalendar: true, altInput: true, altFormat: `h:i K`, dateFormat: `h:i K`});
+      flatpickr(this._element.querySelector(`.card__date`), {altInput: true, altFormat: `j F`, dateFormat: `j F`});
+      flatpickr(this._element.querySelector(`.card__time`), {enableTime: true, noCalendar: true, altInput: true, altFormat: `h:i K`, dateFormat: `h:i K`});
     }
   }
 
