@@ -23,6 +23,8 @@ export default class TaskEdit extends Component {
       isRepeated: false,
     };
 
+    this._datePicker = null;
+    this._timePicker = null;
     this._element = null;
     this._onSubmit = null;
     this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
@@ -30,6 +32,12 @@ export default class TaskEdit extends Component {
 
     this._onChangeDate = this._onChangeDate.bind(this);
     this._onChangeRepeated = this._onChangeRepeated.bind(this);
+  }
+
+  _getChangedTime() {
+    const aditionalDays = this._datePicker.selectedDates[0] - this._dueDate;
+    const aditionalTime = this._timePicker.selectedDates[0] - this._dueDate;
+    return this._dueDate + aditionalDays + aditionalTime;
   }
 
   _onChangeDate() {
@@ -56,8 +64,8 @@ export default class TaskEdit extends Component {
     const entry = {
       title: ``,
       color: ``,
+      dueDate: this._getChangedTime(),
       hashtags: new Set(),
-      date: new Date(),
       repeatingDays: {
         'mo': false,
         'tu': false,
@@ -85,6 +93,7 @@ export default class TaskEdit extends Component {
     evt.preventDefault();
     const formData = new FormData(this._element.querySelector(`.card__form`));
     const newData = this._processForm(formData);
+    this._getChangedTime();
     this.update(newData);
     this._removeClandar();
     return typeof this._onSubmit === `function` && this._onSubmit(newData);
@@ -336,8 +345,8 @@ export default class TaskEdit extends Component {
     this._element.querySelector(`.card__repeat-toggle`)
         .addEventListener(`click`, this._onChangeRepeated);
     if (this._state.isDate) {
-      flatpickr(this._element.querySelector(`.card__date`), {altInput: true, altFormat: `j F`, dateFormat: `j F`});
-      flatpickr(this._element.querySelector(`.card__time`), {enableTime: true, noCalendar: true, altInput: true, altFormat: `h:i K`, dateFormat: `h:i K`});
+      this._datePicker = flatpickr(this._element.querySelector(`.card__date`), {altInput: true, altFormat: `j F`, dateFormat: `j F`});
+      this._timePicker = flatpickr(this._element.querySelector(`.card__time`), {enableTime: true, noCalendar: true, altInput: true, altFormat: `h:i K`, dateFormat: `h:i K`});
     }
   }
 
@@ -357,7 +366,7 @@ export default class TaskEdit extends Component {
     this._hashtags = data.hashtags;
     this._color = data.color;
     this._repeatingDays = data.repeatingDays;
-    this._dueDate = data.dueDate;
+
   }
 
   static createMapper(target) {
@@ -372,8 +381,6 @@ export default class TaskEdit extends Component {
       repeat: (value) => {
         target.repeatingDays[value] = true;
       },
-      date: (value) => target.date[value],
-
     };
   }
 

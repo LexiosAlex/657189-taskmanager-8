@@ -44,14 +44,6 @@ export default class Task extends Component {
       this._state.isOutDated = true;
     }
 
-    if (Date.now() > this._dueDate) {
-      this._state.isOutDated = true;
-    }
-
-    if (this._repeatingDays) {
-      this._state.isRepeated = true;
-    }
-
     if (this._dueDate) {
       this._state.isDate = true;
     }
@@ -229,6 +221,7 @@ export default class Task extends Component {
     this._hashtags = data.hashtags;
     this._color = data.color;
     this._repeatingDays = data.repeatingDays;
+    this._dueDate = data.dueDate;
   }
 
 }
